@@ -30,4 +30,9 @@ class LandingController extends GetxController {
     String uid = auth.currentUser!.uid;
     yield* firestore.collection("customer").doc(uid).snapshots();
   }
+
+  Stream<DocumentSnapshot<Map<String, dynamic>>> streamTransaction() async* {
+    String uid = auth.currentUser!.uid;
+    yield* firestore.collection("transaction").doc(uid).snapshots();
+  }
 }

@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:quantum_admin/component/widget_model.dart';
 import 'package:quantum_admin/constant.dart';
 import 'package:quantum_admin/controller/auth_controller.dart';
+import 'package:quantum_admin/route/route_name.dart';
 
+import '../../component/empty_data.dart';
 import '../../controller/landing_controller.dart';
 
 class Landing extends StatelessWidget {
@@ -63,11 +66,8 @@ class Landing extends StatelessWidget {
                 StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
                   stream: landingC.streamUser(),
                   builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
-                    }
+                    if (snapshot.connectionState == ConnectionState.waiting) return const CircularProgressIndicator();
                     return dText("Rp ${NumberFormat('#,##0', 'id_ID').format(snapshot.data!.data()!['saldo_wallet'])}", fontSize: 36, fontWeight: FontWeight.bold);
-                    // return dText("Rp ${snapshot.data!.data()!['saldo_wallet']}", fontSize: 36, fontWeight: FontWeight.bold);
                   }
                 ),
                 
@@ -78,7 +78,7 @@ class Landing extends StatelessWidget {
                     Column(
                       children: [
                         MaterialButton(
-                          onPressed: () {},
+                          onPressed: () => Get.toNamed(RouteName.qrCode),
                           color: Colors.lightBlue[600],
                           textColor: Colors.lightBlue[100],
                           child: const FaIcon(FontAwesomeIcons.qrcode, size: 20,),
@@ -111,11 +111,26 @@ class Landing extends StatelessWidget {
           const SizedBox(height: kSpaceM),
           const Divider(thickness: 8),
           Expanded(
-            child: Container(
-              // child: ListView.builder(
-              //   itemBuilder: itemBuilder
-              // ),
-            )
+            child: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+              stream: landingC.streamTransaction(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) { 
+                  return const Center(child: CircularProgressIndicator());
+                }
+                // if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.data!.exists) {
+                    return dText("ada datanya", fontSize: 36, fontWeight: FontWeight.bold);
+
+                  } else {
+                    return EmptyData(
+                      asset: Lottie.asset("assets/lotties/no-data-1.json", width: 170, height: 170),
+                      title: "Belum ada data transaksi pembayaranmu",
+                      subTitle: "Jika kamu sudah pernah melakukan pembayaran, maka datanya akan tampil disini",
+                    );
+                  }
+                // }
+              }
+            ),
           )
         ],
       )
