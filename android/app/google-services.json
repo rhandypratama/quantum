@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "900437017520",
+    "project_id": "quantum-88bef",
+    "storage_bucket": "quantum-88bef.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:900437017520:android:6d168dfc342961e8f70c75",
+        "android_client_info": {
+          "package_name": "com.example.quantum_admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "900437017520-92v9q37qroine6dgk1mpk6l1rakempht.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.quantum_admin",
+            "certificate_hash": "e9ba7d0d4453dbc55291c8028d4bb0ee31a5b623"
+          }
+        },
+        {
+          "client_id": "900437017520-prp5dup98pjuq5nqlau9v7cr39tqr1fn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8-N4g_1zDyvsBgs8C43DlCMT-fwcFTU8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "900437017520-prp5dup98pjuq5nqlau9v7cr39tqr1fn.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "900437017520-deos7q9q1m7aq6snns8u6432lhkaevpl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.quantum.admin"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:900437017520:android:0525d05afc721838f70c75",
+        "android_client_info": {
+          "package_name": "com.quantum.app.quantum"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "900437017520-umitorkjp6rj5g155do7kfrcmafgsl62.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.quantum.app.quantum",
+            "certificate_hash": "e9ba7d0d4453dbc55291c8028d4bb0ee31a5b623"
+          }
+        },
+        {
+          "client_id": "900437017520-prp5dup98pjuq5nqlau9v7cr39tqr1fn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8-N4g_1zDyvsBgs8C43DlCMT-fwcFTU8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "900437017520-prp5dup98pjuq5nqlau9v7cr39tqr1fn.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "900437017520-deos7q9q1m7aq6snns8u6432lhkaevpl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.quantum.admin"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
