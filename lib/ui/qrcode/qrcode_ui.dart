@@ -12,14 +12,15 @@ class QrCode extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // backgroundColor: Colors.black,
       body: Center(
         child: Container(
-          color: Colors.white,
+          // color: Colors.black,
           child: QrImage(
-            data: landingC.dataUser['email'].toString(),
-            version: QrVersions.auto,
-            size: Get.width * 0.6,
-            gapless: false,
+            data: landingC.dataUser['uid'].toString(),
+            // version: QrVersions.auto,
+            size: Get.width * 0.54,
+            // gapless: false,
             errorStateBuilder: (cxt, err) {
               return Container(
                 child: dText("Terjadi kesalahan pada saat generate QR Code. Mohon coba beberapa saat lagi.",

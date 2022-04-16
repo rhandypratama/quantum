@@ -57,6 +57,7 @@ class MyApp extends GetWidget<AuthController> {
             darkTheme: darkThemeData(context),
             getPages: AppPages.pages,
             initialRoute: snapshot.data == null ? RouteName.signin : RouteName.landing,
+            // initialRoute: snapshot.data == null ? RouteName.signin : RouteName.transaction,
             // home: Obx(() {
             //   if (controller.state is AuthenticationLoading) {}
             //   if (controller.state is UnAuthenticated) return SignInUI();
