@@ -76,14 +76,25 @@ class AuthController extends GetxController {
           String role = "customer";
           if (emailController.text.trim() == "gusnemat@gmail.com") {
             role = "admin";
+            firestore.collection("customer").doc(uid).set({
+              "uid" : uid,
+              "email" : emailController.text.trim(),
+              "role" : role,
+              "saldo_wallet" : 0,
+              "pin" : "112233",
+              "created_at" : DateTime.now().toIso8601String(),
+            });
+          } else {
+            firestore.collection("customer").doc(uid).set({
+              "uid" : uid,
+              "email" : emailController.text.trim(),
+              "role" : role,
+              "saldo_wallet" : 0,
+              "pin" : "",
+              "created_at" : DateTime.now().toIso8601String(),
+            });
           }
-          firestore.collection("customer").doc(uid).set({
-            "uid" : uid,
-            "email" : emailController.text.trim(),
-            "role" : role,
-            "saldo_wallet" : 0,
-            "created_at" : DateTime.now().toIso8601String(),
-          });
+          
           await userCredential.user!.sendEmailVerification();
 
           // OTOMATIS SIGN IN

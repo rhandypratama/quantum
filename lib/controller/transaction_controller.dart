@@ -22,19 +22,7 @@ class TransactionController extends GetxController {
 
   @override
   void onInit() async {
-    dataAdmin.value = {
-      "uid" : "",
-      "email" : "",
-      "saldo_wallet" : 0,
-      "role" : "customer",
-    };
-    dataUser.value = {
-      "uid" : "",
-      "email" : "",
-      "saldo_wallet" : 0,
-      "role" : "customer",
-    };
-    await getUserInformation();
+    getUserInformation();
     super.onInit();
   }
 
@@ -49,6 +37,20 @@ class TransactionController extends GetxController {
       // params['uid'] = 'AT6KxRdumXPu29rl18RIBBCXFED2';
       // params['uid'] = '5Can1wBdR5gkA61wzCpzTDL3MVk2';
       loading.value = true;
+      dataAdmin.value = {
+        "uid" : "",
+        "email" : "",
+        "saldo_wallet" : 0,
+        "pin" : "112233",
+        "role" : "customer",
+      };
+      dataUser.value = {
+        "uid" : "",
+        "email" : "",
+        "saldo_wallet" : 0,
+        "pin" : "",
+        "role" : "customer",
+      };
       if (auth.currentUser != null && params['uid'] != null) {
         await firestore
           .collection('customer')
@@ -62,10 +64,12 @@ class TransactionController extends GetxController {
                 "uid" : documentSnapshot.get('uid'),
                 "email" : documentSnapshot.get('email'),
                 "saldo_wallet" : documentSnapshot.get('saldo_wallet'),
+                "pin" : documentSnapshot.get('pin'),
                 "role" : documentSnapshot.get('role'),
               };
             }
-        });
+          
+          }).catchError((error) => showSnackbar('error', 'Terjadi Kesalahan', error.toString()));
       }
       // log(dataUser.toString());
       loading.value = false;
@@ -77,12 +81,13 @@ class TransactionController extends GetxController {
 
   Future getAdminInformation() async {
     try {
-      params['uid'] = 'R5XqLl86YbP74hGqsr0ynCxyAb12';
+      String uid = auth.currentUser!.uid;
+      // params['uid'] = 'R5XqLl86YbP74hGqsr0ynCxyAb12';
       loading.value = true;
       if (auth.currentUser != null && params['uid'] != null) {
         await firestore
           .collection('customer')
-          .doc(params['uid'])
+          .doc(uid)
           .get()
           .then((DocumentSnapshot documentSnapshot) {
             if (documentSnapshot.exists) {
@@ -90,6 +95,7 @@ class TransactionController extends GetxController {
                 "uid" : documentSnapshot.get('uid'),
                 "email" : documentSnapshot.get('email'),
                 "saldo_wallet" : documentSnapshot.get('saldo_wallet'),
+                "pin" : documentSnapshot.get('pin'),
                 "role" : documentSnapshot.get('role'),
               };
             }
@@ -106,6 +112,7 @@ class TransactionController extends GetxController {
   Stream<DocumentSnapshot<Map<String, dynamic>>> streamUser() async* {
     // params['uid'] = 'AT6KxRdumXPu29rl18RIBBCXFED2';
     // params['uid'] = '5Can1wBdR5gkA61wzCpzTDL3MVk2';
+    log('PARAM UID ===> ${params['uid']}');
     yield* firestore.collection("customer").doc(params['uid']).snapshots();
   }
 

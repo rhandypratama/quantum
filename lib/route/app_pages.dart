@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import '../ui/customer/customer_ui.dart';
 import '../ui/qrcode/scan_qr_ui.dart';
 import '../ui/qrcode/qrcode_ui.dart';
 import '../ui/auth/forgot_password_ui.dart';
@@ -15,5 +16,6 @@ class AppPages {
     GetPage(name: RouteName.qrCode , page: () => QrCode()),
     GetPage(name: RouteName.scanQrCode , page: () => ScanQRCode()),
     GetPage(name: RouteName.transaction , page: () => Transaction()),
+    GetPage(name: RouteName.customer, page: () => Customer()),
   ];
 }

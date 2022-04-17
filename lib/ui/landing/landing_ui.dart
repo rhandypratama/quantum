@@ -263,6 +263,20 @@ class AdminHeader extends StatelessWidget {
               Column(
                 children: [
                   MaterialButton(
+                    onPressed: () => Get.toNamed(RouteName.customer),
+                    color: Colors.lightBlue[600],
+                    textColor: Colors.white,
+                    child: const Icon(Icons.people_alt_outlined),
+                    padding: const EdgeInsets.all(14),
+                    shape: const CircleBorder(),
+                  ),
+                  const SizedBox(height: 4),
+                  dText("Customer", fontSize: 12)
+                ],
+              ),
+              Column(
+                children: [
+                  MaterialButton(
                     onPressed: () {},
                     color: Colors.lightBlue[600],
                     textColor: Colors.white,
@@ -308,18 +322,26 @@ class AdminTransaction extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
 
-          return ListView(
-            children: snapshot.data!.docs.map((DocumentSnapshot document) {
-              Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-                return ListTile(
-                  dense: true,
-                  leading: FaIcon(data['tipe'] == 'pembayaran' ? FontAwesomeIcons.signOutAlt : FontAwesomeIcons.signInAlt, color: data['tipe'] == 'pembayaran' ? kErrorColor : Colors.green[600], size: 26,),
-                  title: dText(data['email'], fontSize: 16),
-                  subtitle: dText(DateFormat.yMEd().add_jm().format(DateTime.parse(data['tanggal_transaksi'])), fontSize: 12, fontWeight: FontWeight.w600),
-                  trailing: dText("Rp ${NumberFormat('#,##0', 'id_ID').format(data['nominal'])}", fontSize: 14, fontWeight: FontWeight.bold, color: data['tipe'] == 'pembayaran' ? kErrorColor : Colors.green[600])
-                );
-              }).toList(),
+          if (snapshot.data!.docs.isEmpty) {
+            return EmptyData(
+              asset: Lottie.asset("assets/lotties/no-data-1.json", width: 170, height: 170),
+              title: "Belum ada data transaksi pembayaranmu",
+              subTitle: "Jika kamu sudah pernah melakukan pembayaran, maka datanya akan tampil disini",
             );
+          } else {
+            return ListView(
+              children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+                  return ListTile(
+                    dense: true,
+                    leading: FaIcon(data['tipe'] == 'pembayaran' ? FontAwesomeIcons.signOutAlt : FontAwesomeIcons.signInAlt, color: data['tipe'] == 'pembayaran' ? kErrorColor : Colors.green[600], size: 26,),
+                    title: dText(data['email'], fontSize: 16),
+                    subtitle: dText(DateFormat.yMEd().add_jm().format(DateTime.parse(data['tanggal_transaksi'])), fontSize: 12, fontWeight: FontWeight.w600),
+                    trailing: dText("Rp ${NumberFormat('#,##0', 'id_ID').format(data['nominal'])}", fontSize: 14, fontWeight: FontWeight.bold, color: data['tipe'] == 'pembayaran' ? kErrorColor : Colors.green[600])
+                  );
+                }).toList(),
+              );
+          }
 
           // if (snapshot.connectionState == ConnectionState.waiting) { 
           //   return const Center(child: CircularProgressIndicator());

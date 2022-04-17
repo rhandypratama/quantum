@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -59,7 +61,9 @@ class Header extends StatelessWidget {
           const SizedBox(height: kSpaceM),
           const FaIcon(FontAwesomeIcons.child, color: Colors.orange, size: 100,),
           const SizedBox(height: kSpaceM),
-          dText("${transC.dataUser['email']}", fontSize: 16, fontWeight: FontWeight.bold),
+          transC.dataUser['email'] == ""
+          ? dText("User tidak ditemukan", fontSize: 16, fontWeight: FontWeight.bold)
+          : dText("${transC.dataUser['email']}", fontSize: 16, fontWeight: FontWeight.bold),
           const SizedBox(height: kSpaceL),
           dText("Sisa Saldo", fontSize: 16),
           // dText("Rp ${NumberFormat('#,##0', 'id_ID').format(transC.dataUser['saldo_wallet'])}", fontSize: 36, fontWeight: FontWeight.bold),
@@ -67,11 +71,20 @@ class Header extends StatelessWidget {
           StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
             stream: transC.streamUser(),
             builder: (context, snapshot) {
+              // log(snapshot.data.toString());
               if (snapshot.connectionState == ConnectionState.waiting) return const CircularProgressIndicator();
-              return dText("Rp ${NumberFormat('#,##0', 'id_ID').format(snapshot.data!.data()!['saldo_wallet'])}", fontSize: 36, fontWeight: FontWeight.bold);
+              if (snapshot.hasError) {
+                return dText("-", fontSize: 36, fontWeight: FontWeight.bold);
+              } else {
+                if (snapshot.data!.exists) {
+                  return dText("Rp ${NumberFormat('#,##0', 'id_ID').format(snapshot.data!.data()!['saldo_wallet'])}", fontSize: 36, fontWeight: FontWeight.bold);
+                } else {
+                  return dText("-", fontSize: 36, fontWeight: FontWeight.bold);
+                }
+              }
+              
             }
           ),
-          
           const SizedBox(height: kSpaceL),
           FormInputFieldWithIcon(
             controller: transC.nominalController,
