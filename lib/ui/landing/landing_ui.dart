@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -21,7 +23,8 @@ class Landing extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.lightBlue[800],
+        // backgroundColor: Colors.lightBlue[800],
+        backgroundColor: Colors.green,
         // leading: SizedBox(
         //   height: 5,
         //   width: 5,
@@ -49,6 +52,7 @@ class Landing extends StatelessWidget {
       body: Obx(() => 
         landingC.dataUser['role'] == 'admin'
         ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AdminHeader(landingC: landingC),
               const Divider(thickness: 6),
@@ -90,6 +94,7 @@ class CustomerTransaction extends StatelessWidget {
       child: StreamBuilder<QuerySnapshot>(
         stream: landingC.streamCustomerTransaction(),
         builder: (context, snapshot) {
+          // log(snapshot.data!.docs.toString());
           if (snapshot.hasError) {
             return EmptyData(
               asset: Lottie.asset("assets/lotties/no-data-1.json", width: 170, height: 170),
@@ -101,19 +106,27 @@ class CustomerTransaction extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
-    
-          return ListView(
-            children: snapshot.data!.docs.map((DocumentSnapshot document) {
-              Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-                return ListTile(
-                  dense: true,
-                  leading: FaIcon(data['tipe'] == 'pembayaran' ? FontAwesomeIcons.signOutAlt : FontAwesomeIcons.signInAlt, color: data['tipe'] == 'pembayaran' ? kErrorColor : Colors.green[600], size: 26,),
-                  title: dText(data['email'], fontSize: 16),
-                  subtitle: dText(data['tanggal_transaksi'], fontSize: 12),
-                  trailing: dText("Rp ${NumberFormat('#,##0', 'id_ID').format(data['nominal'])}", fontSize: 14, fontWeight: FontWeight.bold, color: data['tipe'] == 'pembayaran' ? kErrorColor : Colors.green[600])
-                );
-              }).toList(),
+
+          if (snapshot.data!.docs.isEmpty) {
+            return EmptyData(
+              asset: Lottie.asset("assets/lotties/no-data-1.json", width: 170, height: 170),
+              title: "Belum ada data transaksi pembayaranmu",
+              subTitle: "Jika kamu sudah pernah melakukan pembayaran, maka datanya akan tampil disini",
             );
+          } else {
+            return ListView(
+              children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+                  return ListTile(
+                    dense: true,
+                    leading: FaIcon(data['tipe'] == 'pembayaran' ? FontAwesomeIcons.signOutAlt : FontAwesomeIcons.signInAlt, color: data['tipe'] == 'pembayaran' ? kErrorColor : Colors.green[600], size: 26,),
+                    title: dText(data['email'], fontSize: 16),
+                    subtitle: dText(DateFormat.yMEd().add_jm().format(DateTime.parse(data['tanggal_transaksi'])), fontSize: 12, fontWeight: FontWeight.w600),
+                    trailing: dText("Rp ${NumberFormat('#,##0', 'id_ID').format(data['nominal'])}", fontSize: 14, fontWeight: FontWeight.bold, color: data['tipe'] == 'pembayaran' ? kErrorColor : Colors.green[600])
+                  );
+                }).toList(),
+              );
+          }
     
           // if (snapshot.connectionState == ConnectionState.waiting) { 
           //   return const Center(child: CircularProgressIndicator());
@@ -302,7 +315,7 @@ class AdminTransaction extends StatelessWidget {
                   dense: true,
                   leading: FaIcon(data['tipe'] == 'pembayaran' ? FontAwesomeIcons.signOutAlt : FontAwesomeIcons.signInAlt, color: data['tipe'] == 'pembayaran' ? kErrorColor : Colors.green[600], size: 26,),
                   title: dText(data['email'], fontSize: 16),
-                  subtitle: dText(data['tanggal_transaksi'], fontSize: 12),
+                  subtitle: dText(DateFormat.yMEd().add_jm().format(DateTime.parse(data['tanggal_transaksi'])), fontSize: 12, fontWeight: FontWeight.w600),
                   trailing: dText("Rp ${NumberFormat('#,##0', 'id_ID').format(data['nominal'])}", fontSize: 14, fontWeight: FontWeight.bold, color: data['tipe'] == 'pembayaran' ? kErrorColor : Colors.green[600])
                 );
               }).toList(),

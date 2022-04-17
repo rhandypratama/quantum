@@ -39,7 +39,8 @@ class TransactionController extends GetxController {
 
   Future getUserInformation() async {
     try {
-      params['uid'] = 'AT6KxRdumXPu29rl18RIBBCXFED2';
+      // params['uid'] = 'AT6KxRdumXPu29rl18RIBBCXFED2';
+      // params['uid'] = '5Can1wBdR5gkA61wzCpzTDL3MVk2';
       loading.value = true;
       if (auth.currentUser != null && params['uid'] != null) {
         await firestore
@@ -67,38 +68,9 @@ class TransactionController extends GetxController {
     }
   }
 
-  // Future getAdminInformation() async {
-  //   try {
-  //     params['uid'] = 'AT6KxRdumXPu29rl18RIBBCXFED2';
-  //     loading.value = true;
-  //     if (auth.currentUser != null && params['uid'] != null) {
-  //       await firestore
-  //         .collection('customer')
-  //         .doc(params['uid'])
-  //         .get()
-  //         .then((DocumentSnapshot documentSnapshot) {
-  //           if (documentSnapshot.exists) {
-  //             // log("Document data: ${documentSnapshot.get('role')}");
-  //             // role.value = documentSnapshot.get('role');
-  //             dataUser.value = {
-  //               "uid" : documentSnapshot.get('uid'),
-  //               "email" : documentSnapshot.get('email'),
-  //               "saldo_wallet" : documentSnapshot.get('saldo_wallet'),
-  //               "role" : documentSnapshot.get('role'),
-  //             };
-  //           }
-  //       });
-  //     }
-  //     // log(dataUser.toString());
-  //     loading.value = false;
-  //   } catch (e) {
-  //     loading.value = false;
-  //     showSnackbar('error', 'Terjadi kesalahan', e.toString());
-  //   }
-  // }
-
   Stream<DocumentSnapshot<Map<String, dynamic>>> streamUser() async* {
-    params['uid'] = 'AT6KxRdumXPu29rl18RIBBCXFED2';
+    // params['uid'] = 'AT6KxRdumXPu29rl18RIBBCXFED2';
+    // params['uid'] = '5Can1wBdR5gkA61wzCpzTDL3MVk2';
     yield* firestore.collection("customer").doc(params['uid']).snapshots();
   }
 

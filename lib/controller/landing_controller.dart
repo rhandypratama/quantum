@@ -77,10 +77,19 @@ class LandingController extends GetxController {
 
   Stream<QuerySnapshot> streamCustomerTransaction() async* {
     String uid = auth.currentUser!.uid;
-    yield* firestore.collection("transactions").where('user_id', isEqualTo: uid).snapshots();
+    yield* firestore
+      .collection("transactions")
+      .where('user_id', isEqualTo: uid)
+      .orderBy('tanggal_transaksi', descending: true)
+      .limitToLast(30)
+      .snapshots();
   }
 
   Stream<QuerySnapshot> streamAdminTransaction() async* {
-    yield* firestore.collection("transactions").snapshots();
+    yield* firestore
+      .collection("transactions")
+      .orderBy('tanggal_transaksi', descending: true)
+      .limitToLast(30)
+      .snapshots();
   }
 }

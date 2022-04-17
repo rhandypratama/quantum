@@ -33,7 +33,9 @@ class FormInputFieldWithIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       style: TextStyle(
-        color: Theme.of(Get.context!).bottomNavigationBarTheme.selectedItemColor!
+        color: Theme.of(Get.context!).bottomNavigationBarTheme.selectedItemColor!,
+        fontSize: 16,
+        fontWeight: FontWeight.bold
       ),
       decoration: InputDecoration(
         labelStyle: TextStyle(
