@@ -39,7 +39,6 @@ class _ScanQRCodeState extends State<ScanQRCode> {
     controller.scannedDataStream.listen((barcode) { 
       setState(() => this.barcode = barcode);
       if (this.barcode != null) {
-        // Clipboard.setData(ClipboardData());
         HapticFeedback.vibrate();
         Get.toNamed(RouteName.transaction, parameters: {"uid" : this.barcode!.code.toString()});
       }

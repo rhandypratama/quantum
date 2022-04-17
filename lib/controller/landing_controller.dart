@@ -67,6 +67,7 @@ class LandingController extends GetxController {
 
   Stream<DocumentSnapshot<Map<String, dynamic>>> streamUser() async* {
     String uid = auth.currentUser!.uid;
+    log('UID ==> $uid');
     yield* firestore.collection("customer").doc(uid).snapshots();
   }
 

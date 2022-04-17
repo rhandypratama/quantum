@@ -15,12 +15,19 @@ class TransactionController extends GetxController {
   final params = Get.parameters;
 
   final dataUser = {}.obs;
+  final dataAdmin = {}.obs;
   final role = "".obs;
   final tipeTransaksi = "".obs;
   final loading = false.obs;
 
   @override
   void onInit() async {
+    dataAdmin.value = {
+      "uid" : "",
+      "email" : "",
+      "saldo_wallet" : 0,
+      "role" : "customer",
+    };
     dataUser.value = {
       "uid" : "",
       "email" : "",
@@ -68,6 +75,34 @@ class TransactionController extends GetxController {
     }
   }
 
+  Future getAdminInformation() async {
+    try {
+      params['uid'] = 'R5XqLl86YbP74hGqsr0ynCxyAb12';
+      loading.value = true;
+      if (auth.currentUser != null && params['uid'] != null) {
+        await firestore
+          .collection('customer')
+          .doc(params['uid'])
+          .get()
+          .then((DocumentSnapshot documentSnapshot) {
+            if (documentSnapshot.exists) {
+              dataAdmin.value = {
+                "uid" : documentSnapshot.get('uid'),
+                "email" : documentSnapshot.get('email'),
+                "saldo_wallet" : documentSnapshot.get('saldo_wallet'),
+                "role" : documentSnapshot.get('role'),
+              };
+            }
+        });
+      }
+      // log(dataUser.toString());
+      loading.value = false;
+    } catch (e) {
+      loading.value = false;
+      showSnackbar('error', 'Terjadi kesalahan', e.toString());
+    }
+  }
+
   Stream<DocumentSnapshot<Map<String, dynamic>>> streamUser() async* {
     // params['uid'] = 'AT6KxRdumXPu29rl18RIBBCXFED2';
     // params['uid'] = '5Can1wBdR5gkA61wzCpzTDL3MVk2';
@@ -94,12 +129,16 @@ class TransactionController extends GetxController {
             'tanggal_transaksi': DateTime.now().toIso8601String(),
           })
           .then((_) async {
-            await getUserInformation(); // mencari saldo wallet terakhir
+            await getUserInformation(); // mencari saldo wallet customer terakhir
+            await getAdminInformation(); // mencari saldo wallet admin terakhir
             var hasil = 0;
+            var hasilAdmin = 0;
             if (tipeTransaksi.value == 'pembayaran') {
               hasil = dataUser['saldo_wallet'] - int.parse(nominalController.text.trim());
+              hasilAdmin = dataAdmin['saldo_wallet'] - int.parse(nominalController.text.trim());
             } else {
               hasil = dataUser['saldo_wallet'] + int.parse(nominalController.text.trim());
+              hasilAdmin = dataAdmin['saldo_wallet'] + int.parse(nominalController.text.trim());
             }
             customer
               .doc(dataUser['uid'].toString())
@@ -109,7 +148,7 @@ class TransactionController extends GetxController {
                 // UPDATE SALDO ADMIN
                 customer
                   .doc(auth.currentUser!.uid)
-                  .update({'saldo_wallet': hasil.toInt()})
+                  .update({'saldo_wallet': hasilAdmin.toInt()})
                   .then((_) {
                     Get.offAllNamed(RouteName.landing);
                   })
