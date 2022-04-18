@@ -20,7 +20,7 @@ class Header extends StatelessWidget {
           const SizedBox(height: kSpaceL),
           dText("Yuk ikutan, ada yang baru nih.", 
             fontWeight: FontWeight.bold, 
-            fontSize: 34,
+            fontSize: 24,
             color: Theme.of(Get.context!).bottomNavigationBarTheme.selectedItemColor!
           ),
           const SizedBox(height: kSpaceS),

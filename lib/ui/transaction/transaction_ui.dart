@@ -59,7 +59,7 @@ class Header extends StatelessWidget {
         // crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(height: kSpaceM),
-          const FaIcon(FontAwesomeIcons.child, color: Colors.orange, size: 100,),
+          const FaIcon(FontAwesomeIcons.child, color: Colors.orange, size: 70,),
           const SizedBox(height: kSpaceM),
           transC.dataUser['email'] == ""
           ? dText("User tidak ditemukan", fontSize: 16, fontWeight: FontWeight.bold)
@@ -95,61 +95,91 @@ class Header extends StatelessWidget {
             onChanged: (_) {},
             onSaved: (value) => transC.nominalController.text = value!,
           ),
+          const SizedBox(height: kSpaceL),
+          Obx(() =>
+            transC.loading.value
+            ? buttonLoading()
+            : 
+            PrimaryButton(
+              text: "Top Up", 
+              press: () {
+                transC.tipeTransaksi.value = 'top up';
+                Get.bottomSheet(
+                  Confirmation(),
+                  enterBottomSheetDuration: const Duration(milliseconds: 300),
+                  barrierColor: Colors.black38,
+                  isDismissible: true,
+                  enableDrag: true,
+                  isScrollControlled: true,
+                );
+              }
+            )),
+          //   MaterialButton(
+          //       shape: const RoundedRectangleBorder(
+          //         borderRadius: BorderRadius.all(Radius.circular(kRadiusS)),
+          //         side: BorderSide.none
+          //       ),
+          //       padding: const EdgeInsets.all(kSpaceM),
+          //       color: Colors.green,
+          //       minWidth: double.infinity,
+          //       elevation: 0,
+          //       child: dText("Top Up", color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+          //       onPressed: () {
+          //         transC.tipeTransaksi.value = 'top up';
+          //         Get.bottomSheet(
+          //           Confirmation(),
+          //           enterBottomSheetDuration: const Duration(milliseconds: 300),
+          //           barrierColor: Colors.black38,
+          //           isDismissible: true,
+          //           enableDrag: true,
+          //           isScrollControlled: true,
+          //         );
+          //       },
+          //       // child: dText(text, fontSize: 18, fontWeight: FontWeight.w600),
+          //     ),
+          // ),
           const SizedBox(height: kSpaceS),
           Obx(() =>
             transC.loading.value
             ? buttonLoading()
-            : MaterialButton(
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(kRadiusS)),
-                  side: BorderSide.none
-                ),
-                padding: const EdgeInsets.all(kSpaceM),
-                color: Colors.green,
-                minWidth: double.infinity,
-                elevation: 0,
-                child: dText("Top Up", color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-                onPressed: () {
-                  transC.tipeTransaksi.value = 'top up';
-                  Get.bottomSheet(
-                    Confirmation(),
-                    enterBottomSheetDuration: const Duration(milliseconds: 300),
-                    barrierColor: Colors.black38,
-                    isDismissible: true,
-                    enableDrag: true,
-                    isScrollControlled: true,
-                  );
-                },
-                // child: dText(text, fontSize: 18, fontWeight: FontWeight.w600),
-              ),
-          ),
-          const SizedBox(height: kSpaceS),
-          Obx(() =>
-            transC.loading.value
-            ? buttonLoading()
-            : MaterialButton(
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(kRadiusS)),
-                  side: BorderSide.none
-                ),
-                padding: const EdgeInsets.all(kSpaceM),
-                color: Colors.red,
-                minWidth: double.infinity,
-                elevation: 0,
-                child: dText("Pembayaran", color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-                onPressed: () {
-                  transC.tipeTransaksi.value = 'pembayaran';
-                  Get.bottomSheet(
-                    Confirmation(),
-                    enterBottomSheetDuration: const Duration(milliseconds: 300),
-                    barrierColor: Colors.black38,
-                    isDismissible: true,
-                    enableDrag: true,
-                    isScrollControlled: true,
-                  );
-                }
-                // child: dText(text, fontSize: 18, fontWeight: FontWeight.w600),
-              ),
+            : 
+            PrimaryButton(
+              text: "Pembayaran", 
+              press: () {
+                transC.tipeTransaksi.value = 'pembayaran';
+                Get.bottomSheet(
+                  Confirmation(),
+                  enterBottomSheetDuration: const Duration(milliseconds: 300),
+                  barrierColor: Colors.black38,
+                  isDismissible: true,
+                  enableDrag: true,
+                  isScrollControlled: true,
+                );
+              }
+            )
+            // MaterialButton(
+            //     shape: const RoundedRectangleBorder(
+            //       borderRadius: BorderRadius.all(Radius.circular(kRadiusS)),
+            //       side: BorderSide.none
+            //     ),
+            //     padding: const EdgeInsets.all(kSpaceM),
+            //     color: Colors.red,
+            //     minWidth: double.infinity,
+            //     elevation: 0,
+            //     child: dText("Pembayaran", color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+            //     onPressed: () {
+            //       transC.tipeTransaksi.value = 'pembayaran';
+            //       Get.bottomSheet(
+            //         Confirmation(),
+            //         enterBottomSheetDuration: const Duration(milliseconds: 300),
+            //         barrierColor: Colors.black38,
+            //         isDismissible: true,
+            //         enableDrag: true,
+            //         isScrollControlled: true,
+            //       );
+            //     }
+            //     // child: dText(text, fontSize: 18, fontWeight: FontWeight.w600),
+            //   ),
           )
         ]
       ),

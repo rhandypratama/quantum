@@ -29,7 +29,7 @@ class TransactionController extends GetxController {
   @override
   void onClose() async {
     nominalController.dispose();
-    super.onInit();
+    super.onClose();
   }
 
   Future getUserInformation() async {

@@ -54,6 +54,9 @@ class AuthController extends GetxController {
   Future<void> signOut() async {
     try {
       auth.signOut();
+      emailController.text = "";
+      passwordController.text = "";
+      emailResetController.text = "";
     } catch (e) {
       showSnackbar('error', 'Terjadi kesalahan', e.toString());
     } finally {

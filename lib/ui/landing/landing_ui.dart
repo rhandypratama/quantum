@@ -123,7 +123,14 @@ class CustomerTransaction extends StatelessWidget {
                     dense: true,
                     leading: FaIcon(data['tipe'] == 'pembayaran' ? FontAwesomeIcons.signOutAlt : FontAwesomeIcons.signInAlt, color: data['tipe'] == 'pembayaran' ? kErrorColor : Colors.green[600], size: 26,),
                     title: dText(data['email'], fontSize: 16),
-                    subtitle: dText(DateFormat.yMEd().add_jm().format(DateTime.parse(data['tanggal_transaksi'])), fontSize: 12, fontWeight: FontWeight.w600),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        dText(DateFormat.yMEd().add_jm().format(DateTime.parse(data['tanggal_transaksi'])), fontSize: 12, fontWeight: FontWeight.w600),
+                        dText("Transaction ID : ${document.id}", fontSize: 10, fontWeight: FontWeight.w500),
+                      ]
+                    ),
+                    // subtitle: dText(DateFormat.yMEd().add_jm().format(DateTime.parse(data['tanggal_transaksi'])), fontSize: 12, fontWeight: FontWeight.w600),
                     trailing: dText("Rp ${NumberFormat('#,##0', 'id_ID').format(data['nominal'])}", fontSize: 14, fontWeight: FontWeight.bold, color: data['tipe'] == 'pembayaran' ? kErrorColor : Colors.green[600])
                   );
                 }).toList(),
@@ -314,6 +321,7 @@ class AdminTransaction extends StatelessWidget {
       child: StreamBuilder<QuerySnapshot>(
         stream: landingC.streamAdminTransaction(),
         builder: (context, snapshot) {
+          
           if (snapshot.hasError) {
             return EmptyData(
               asset: Lottie.asset("assets/lotties/no-data-1.json", width: 170, height: 170),
@@ -326,75 +334,126 @@ class AdminTransaction extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (snapshot.data!.docs.isEmpty) {
-            return EmptyData(
-              asset: Lottie.asset("assets/lotties/no-data-1.json", width: 170, height: 170),
-              title: "Belum ada data transaksi pembayaranmu",
-              subTitle: "Jika kamu sudah pernah melakukan pembayaran, maka datanya akan tampil disini",
-            );
-          } else {
-            return ListView(
+          // if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.data!.docs.isNotEmpty) {
+              return ListView(
               children: snapshot.data!.docs.map((DocumentSnapshot document) {
                 Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-                  // log(document.id);
-                  // log(data.toString());
-                  return Slidable(
-                    key: const ValueKey(0),
-                    endActionPane: ActionPane(
-                      motion: StretchMotion(),
+                  return ListTile(
+                    // dense: true,
+                    leading: FaIcon(data['tipe'] == 'pembayaran' ? FontAwesomeIcons.signOutAlt : FontAwesomeIcons.signInAlt, color: data['tipe'] == 'pembayaran' ? kErrorColor : Colors.green[600], size: 26,),
+                    title: dText(data['email'], fontSize: 16),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // SlidableAction(
-                        //   // flex: 2,
-                        //   onPressed: (context) {},
-                        //   backgroundColor: Color(0xFF7BC043),
-                        //   foregroundColor: Colors.white,
-                        //   icon: Icons.archive,
-                        //   label: 'Archive',
-                        // ),
-                        SlidableAction(
-                          onPressed: (context) {
-                            landingC.dataTrans.value = {
-                              'transId': document.id,
-                              'uid': data['user_id'],
-                              'email': data['email'],
-                              'tipe': data['tipe'],
-                              'nominal': data['nominal'],
-                            };
-                            Get.bottomSheet(
-                              Confirmation(),
-                              enterBottomSheetDuration: const Duration(milliseconds: 300),
-                              barrierColor: Colors.black38,
-                              isDismissible: true,
-                              enableDrag: true,
-                              isScrollControlled: true,
-                            );
-                          },
-                          backgroundColor: const Color(0xFFFE4A49),
-                          foregroundColor: Colors.white,
-                          icon: Icons.delete,
-                          label: 'Hapus',
-                        ),
-                      ],
-                    ),
-
-                    child: ListTile(
-                      dense: true,
-                      leading: FaIcon(data['tipe'] == 'pembayaran' ? FontAwesomeIcons.signOutAlt : FontAwesomeIcons.signInAlt, color: data['tipe'] == 'pembayaran' ? kErrorColor : Colors.green[600], size: 26,),
-                      title: dText(data['email'], fontSize: 16),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          dText(DateFormat.yMEd().add_jm().format(DateTime.parse(data['tanggal_transaksi'])), fontSize: 12, fontWeight: FontWeight.w600),
-                          dText("Transaction ID : ${document.id}", fontSize: 10, fontWeight: FontWeight.w500),
-                        ]
-                      ), 
-                      trailing: dText("Rp ${NumberFormat('#,##0', 'id_ID').format(data['nominal'])}", fontSize: 14, fontWeight: FontWeight.bold, color: data['tipe'] == 'pembayaran' ? kErrorColor : Colors.green[600])
-                    )
+                        dText(DateFormat.yMEd().add_jm().format(DateTime.parse(data['tanggal_transaksi'])), fontSize: 12, fontWeight: FontWeight.w600),
+                        dText("Transaction ID : ${document.id}", fontSize: 10, fontWeight: FontWeight.w500),
+                      ]
+                    ), 
+                    trailing: dText("Rp ${NumberFormat('#,##0', 'id_ID').format(data['nominal'])}", fontSize: 14, fontWeight: FontWeight.bold, color: data['tipe'] == 'pembayaran' ? kErrorColor : Colors.green[600]),
+                    onLongPress: () {
+                      landingC.dataTrans.value = {
+                        'transId': document.id,
+                        'uid': data['user_id'],
+                        'email': data['email'],
+                        'tipe': data['tipe'],
+                        'nominal': data['nominal'],
+                      };
+                      Get.bottomSheet(
+                        Confirmation(),
+                        enterBottomSheetDuration: const Duration(milliseconds: 300),
+                        barrierColor: Colors.black38,
+                        isDismissible: true,
+                        enableDrag: true,
+                        isScrollControlled: true,
+                      );
+                    },
                   );
                 }).toList(),
               );
+              
+            } else {
+              return EmptyData(
+                asset: Lottie.asset("assets/lotties/no-data-1.json", width: 170, height: 170),
+                title: "Belum ada data transaksi pembayaranmu",
+                subTitle: "Jika kamu sudah pernah melakukan pembayaran, maka datanya akan tampil disini",
+              );
+            }
+          // }
+          // return SizedBox.shrink();
+        }
+          
+          
+          
+          // if (snapshot.data!.docs.isEmpty) {
+          //   return EmptyData(
+          //     asset: Lottie.asset("assets/lotties/no-data-1.json", width: 170, height: 170),
+          //     title: "Belum ada data transaksi pembayaranmu",
+          //     subTitle: "Jika kamu sudah pernah melakukan pembayaran, maka datanya akan tampil disini",
+          //   );
+          // } else {
+          //   return ListView(
+          //     children: snapshot.data!.docs.map((DocumentSnapshot document) {
+          //       Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+          //         // log(document.id);
+          //         // log(data.toString());
+          //         return Slidable(
+          //           key: const ValueKey(0),
+          //           endActionPane: ActionPane(
+          //             motion: StretchMotion(),
+          //             children: [
+          //               // SlidableAction(
+          //               //   // flex: 2,
+          //               //   onPressed: (context) {},
+          //               //   backgroundColor: Color(0xFF7BC043),
+          //               //   foregroundColor: Colors.white,
+          //               //   icon: Icons.archive,
+          //               //   label: 'Archive',
+          //               // ),
+          //               SlidableAction(
+          //                 onPressed: (context) {
+          //                   landingC.dataTrans.value = {
+          //                     'transId': document.id,
+          //                     'uid': data['user_id'],
+          //                     'email': data['email'],
+          //                     'tipe': data['tipe'],
+          //                     'nominal': data['nominal'],
+          //                   };
+          //                   Get.bottomSheet(
+          //                     Confirmation(),
+          //                     enterBottomSheetDuration: const Duration(milliseconds: 300),
+          //                     barrierColor: Colors.black38,
+          //                     isDismissible: true,
+          //                     enableDrag: true,
+          //                     isScrollControlled: true,
+          //                   );
+          //                 },
+          //                 backgroundColor: const Color(0xFFFE4A49),
+          //                 foregroundColor: Colors.white,
+          //                 icon: Icons.delete,
+          //                 label: 'Hapus',
+          //               ),
+          //             ],
+          //           ),
 
-          }
+          //           child: ListTile(
+          //             // dense: true,
+          //             leading: FaIcon(data['tipe'] == 'pembayaran' ? FontAwesomeIcons.signOutAlt : FontAwesomeIcons.signInAlt, color: data['tipe'] == 'pembayaran' ? kErrorColor : Colors.green[600], size: 26,),
+          //             title: dText(data['email'], fontSize: 16),
+          //             subtitle: Column(
+          //               crossAxisAlignment: CrossAxisAlignment.start,
+          //               children: [
+          //                 dText(DateFormat.yMEd().add_jm().format(DateTime.parse(data['tanggal_transaksi'])), fontSize: 12, fontWeight: FontWeight.w600),
+          //                 dText("Transaction ID : ${document.id}", fontSize: 10, fontWeight: FontWeight.w500),
+          //               ]
+          //             ), 
+          //             trailing: dText("Rp ${NumberFormat('#,##0', 'id_ID').format(data['nominal'])}", fontSize: 14, fontWeight: FontWeight.bold, color: data['tipe'] == 'pembayaran' ? kErrorColor : Colors.green[600])
+          //           )
+          //         );
+          //       }).toList(),
+          //     );
+
+          // }
 
           // if (snapshot.connectionState == ConnectionState.waiting) { 
           //   return const Center(child: CircularProgressIndicator());
@@ -411,7 +470,7 @@ class AdminTransaction extends StatelessWidget {
           //     );
           //   }
           // }
-        }
+        // }
       ),
     );
   }

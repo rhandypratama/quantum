@@ -43,7 +43,7 @@ class ForgotPassword extends StatelessWidget {
                               const SizedBox(height: kSpaceL),
                               dText("Lupa passwordmu?", 
                                 fontWeight: FontWeight.bold, 
-                                fontSize: 34,
+                                fontSize: 30,
                                 color: Theme.of(Get.context!).bottomNavigationBarTheme.selectedItemColor!
                               ),
                               const SizedBox(height: kSpaceS),
@@ -80,7 +80,7 @@ class ForgotPassword extends StatelessWidget {
                         const FormVerticalSpace(),
                         TextButton(
                           onPressed: () => Get.back(), 
-                          child: dText("Kembali ke halaman awal", color: Colors.blue[700])
+                          child: dText("Kembali ke halaman awal", color: Colors.blue[700], fontSize: 14)
                         )
                       ],
                     ),

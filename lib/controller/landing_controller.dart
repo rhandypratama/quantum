@@ -10,6 +10,8 @@ class LandingController extends GetxController {
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+  TextEditingController pinController = TextEditingController();
+
   final dataUser = {}.obs;
   final dataAdmin = {}.obs;
   final dataCustomer = {}.obs;
@@ -41,7 +43,11 @@ class LandingController extends GetxController {
     super.onInit();
   }
 
-  void doNothing(BuildContext contetx) {}
+  @override
+  void onClose() async {
+    pinController.dispose();
+    super.onClose();
+  }
 
   getUserInformation() async {
     if (auth.currentUser != null) {
@@ -162,51 +168,62 @@ class LandingController extends GetxController {
 
   Future deleteTransaction() async {
     try {
-      // loadingDelete.value = true;
-
+      loadingDelete.value = true;
+      
       await getCustomerInformation(); // mencari saldo wallet customer terakhir
       await getAdminInformation(); // mencari saldo wallet admin terakhir
       // log(dataCustomer.toString());
-      // log(dataAdmin.toString());
+      log(dataAdmin.toString());
       // log(dataTrans.toString());
 
+      if (pinController.text.trim().isEmpty) {
+        loadingDelete.value = false;
+        showSnackbar('error', 'PIN Transaksi', 'Untuk menghapus transaksi ini dibutuhkan PIN Transaksimu');
+      } else if (pinController.text.trim() != dataAdmin['pin']) {
+        loadingDelete.value = false;
+        showSnackbar('error', 'PIN Transaksi', 'PIN Transaksimu tidak valid');
+        pinController.text = "";
+      } else if (pinController.text.trim() == dataAdmin['pin']) {
+          
+        CollectionReference trans = firestore.collection('transactions');
+        CollectionReference customer = firestore.collection('customer');
 
-      CollectionReference trans = firestore.collection('transactions');
-      CollectionReference customer = firestore.collection('customer');
+        var hasilCustomer = 0;
+        var hasilAdmin = 0;
+        if (dataTrans['tipe'] == 'pembayaran') {
+          hasilCustomer = dataCustomer['saldo_wallet'] + dataTrans['nominal'];
+          hasilAdmin = dataAdmin['saldo_wallet'] + dataTrans['nominal'];
+        } else {
+          hasilCustomer = dataCustomer['saldo_wallet'] - dataTrans['nominal'];
+          hasilAdmin = dataAdmin['saldo_wallet'] - dataTrans['nominal'];
+        }
 
-      var hasilCustomer = 0;
-      var hasilAdmin = 0;
-      if (dataTrans['tipe'] == 'pembayaran') {
-        hasilCustomer = dataCustomer['saldo_wallet'] + dataTrans['nominal'];
-        hasilAdmin = dataAdmin['saldo_wallet'] + dataTrans['nominal'];
-      } else {
-        hasilCustomer = dataCustomer['saldo_wallet'] + dataTrans['nominal'];
-        hasilAdmin = dataAdmin['saldo_wallet'] + dataTrans['nominal'];
+        // UPDATE SALDO WALLET CUSTOMER
+        await customer
+          .doc(dataTrans['uid'].toString())
+          .update({'saldo_wallet': hasilCustomer.toInt()})
+          .then((_) {})
+          .catchError((error) => showSnackbar('error', 'Terjadi kesalahan pada saat update saldo wallet customer', error.toString()));
+
+        // UPDATE SALDO WALLET ADMIN
+        await customer
+          .doc(auth.currentUser!.uid)
+          .update({'saldo_wallet': hasilAdmin.toInt()})
+          .then((_) {})
+          .catchError((error) => showSnackbar('error', 'Terjadi kesalahan pada saat update saldo wallet admin', error.toString()));
+
+        // DELETE TRANSAKSI
+        await trans
+          .doc(dataTrans['transId'].toString())
+          .delete()
+          .then((value) {})
+          .catchError((error) => showSnackbar('error', 'Terjadi kesalahan pada saat hapus transaksi', error.toString()));
+
+        loadingDelete.value = false;
+        pinController.text = "";
+        if (Get.isSnackbarOpen) Get.back();
+        showSnackbar('success', 'Berhasil', 'Transaksi berhasil dihapus');
       }
-
-      // UPDATE SALDO WALLET CUSTOMER
-      await customer
-        .doc(dataTrans['uid'].toString())
-        .update({'saldo_wallet': hasilCustomer.toInt()})
-        .then((_) {})
-        .catchError((error) => showSnackbar('error', 'Terjadi kesalahan pada saat update saldo wallet customer', error.toString()));
-
-      // UPDATE SALDO WALLET ADMIN
-      await customer
-        .doc(auth.currentUser!.uid)
-        .update({'saldo_wallet': hasilAdmin.toInt()})
-        .then((_) {})
-        .catchError((error) => showSnackbar('error', 'Terjadi kesalahan pada saat update saldo wallet admin', error.toString()));
-
-      // DELETE TRANSAKSI
-      await trans
-        .doc(dataTrans['transId'].toString())
-        .delete()
-        .then((value) {})
-        .catchError((error) => showSnackbar('error', 'Terjadi kesalahan pada saat hapus transaksi', error.toString()));
-
-      loadingDelete.value = false;
-      showSnackbar('success', 'Berhasil', 'Transaksi berhasil dihapus');
       
     } catch (e) {
       loadingDelete.value = false;

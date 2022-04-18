@@ -2,11 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../component/form_input_field_with_icon.dart';
 import '../../controller/landing_controller.dart';
 
 import '../../../component/line_modal.dart';
 import '../../../component/widget_model.dart';
 import '../../../constant.dart';
+import '../../helper/validator.dart';
 
 class Confirmation extends StatelessWidget {
   Confirmation({Key? key}) : super(key: key);
@@ -39,6 +41,21 @@ class Confirmation extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(kDefaultPadding, 0, kDefaultPadding, kSpaceS),
               child: dText("Apakah yakin mau melanjutkan?", fontWeight:FontWeight.normal, fontSize: 16)
+            ),
+            const SizedBox(height: kSpaceS),
+            Padding(
+              padding: const EdgeInsets.all(kSpaceM),
+              child: FormInputFieldWithIcon(
+                controller: landingC.pinController,
+                iconPrefix: Icons.vpn_key,
+                labelText: 'PIN Transaksi',
+                obscureText: true,
+                validator: Validator().password,
+                // keyboardType: TextInputType.number,
+                onChanged: (_) {},
+                onSaved: (value) => landingC.pinController.text = value!,
+                maxLines: 1,
+              ),
             ),
             const SizedBox(height: kSpaceS),
             Container(

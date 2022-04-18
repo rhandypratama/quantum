@@ -81,7 +81,7 @@ class SignInUI extends StatelessWidget {
                         const FormVerticalSpace(),
                         TextButton(
                           onPressed: () => Get.toNamed(RouteName.forgotPassword), 
-                          child: dText("Sudah punya akun tapi lupa password?", color: Colors.blue[700])
+                          child: dText("Sudah punya akun tapi lupa password?", color: Colors.blue[700], fontSize: 14)
                         )
                       ],
                     ),
