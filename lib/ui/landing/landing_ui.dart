@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -13,6 +14,7 @@ import 'package:quantum_admin/route/route_name.dart';
 
 import '../../component/empty_data.dart';
 import '../../controller/landing_controller.dart';
+import 'confirmation.dart';
 
 class Landing extends StatelessWidget {
   Landing({Key? key}) : super(key: key);
@@ -37,7 +39,7 @@ class Landing extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               dText(landingC.dataUser['email'], fontSize: 18),
-              dText("uid : ${landingC.dataUser['uid']}", fontSize: 10)
+              // dText("uid : ${landingC.dataUser['uid']}", fontSize: 10)
 
             ],
           )
@@ -193,20 +195,20 @@ class CustomerHeader extends StatelessWidget {
                   dText("QR Code", fontSize: 12)
                 ],
               ),
-              Column(
-                children: [
-                  MaterialButton(
-                    onPressed: () {},
-                    color: Colors.lightBlue[600],
-                    textColor: Colors.white,
-                    child: const Icon(Icons.bar_chart_outlined),
-                    padding: const EdgeInsets.all(14),
-                    shape: const CircleBorder(),
-                  ),
-                  const SizedBox(height: 4),
-                  dText("Laporan", fontSize: 12)
-                ],
-              ),
+              // Column(
+              //   children: [
+              //     MaterialButton(
+              //       onPressed: () {},
+              //       color: Colors.lightBlue[600],
+              //       textColor: Colors.white,
+              //       child: const Icon(Icons.bar_chart_outlined),
+              //       padding: const EdgeInsets.all(14),
+              //       shape: const CircleBorder(),
+              //     ),
+              //     const SizedBox(height: 4),
+              //     dText("Laporan", fontSize: 12)
+              //   ],
+              // ),
             ],
           ),
         ]
@@ -304,6 +306,8 @@ class AdminTransaction extends StatelessWidget {
 
   final LandingController landingC;
 
+  
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -332,15 +336,64 @@ class AdminTransaction extends StatelessWidget {
             return ListView(
               children: snapshot.data!.docs.map((DocumentSnapshot document) {
                 Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-                  return ListTile(
-                    dense: true,
-                    leading: FaIcon(data['tipe'] == 'pembayaran' ? FontAwesomeIcons.signOutAlt : FontAwesomeIcons.signInAlt, color: data['tipe'] == 'pembayaran' ? kErrorColor : Colors.green[600], size: 26,),
-                    title: dText(data['email'], fontSize: 16),
-                    subtitle: dText(DateFormat.yMEd().add_jm().format(DateTime.parse(data['tanggal_transaksi'])), fontSize: 12, fontWeight: FontWeight.w600),
-                    trailing: dText("Rp ${NumberFormat('#,##0', 'id_ID').format(data['nominal'])}", fontSize: 14, fontWeight: FontWeight.bold, color: data['tipe'] == 'pembayaran' ? kErrorColor : Colors.green[600])
+                  // log(document.id);
+                  // log(data.toString());
+                  return Slidable(
+                    key: const ValueKey(0),
+                    endActionPane: ActionPane(
+                      motion: StretchMotion(),
+                      children: [
+                        // SlidableAction(
+                        //   // flex: 2,
+                        //   onPressed: (context) {},
+                        //   backgroundColor: Color(0xFF7BC043),
+                        //   foregroundColor: Colors.white,
+                        //   icon: Icons.archive,
+                        //   label: 'Archive',
+                        // ),
+                        SlidableAction(
+                          onPressed: (context) {
+                            landingC.dataTrans.value = {
+                              'transId': document.id,
+                              'uid': data['user_id'],
+                              'email': data['email'],
+                              'tipe': data['tipe'],
+                              'nominal': data['nominal'],
+                            };
+                            Get.bottomSheet(
+                              Confirmation(),
+                              enterBottomSheetDuration: const Duration(milliseconds: 300),
+                              barrierColor: Colors.black38,
+                              isDismissible: true,
+                              enableDrag: true,
+                              isScrollControlled: true,
+                            );
+                          },
+                          backgroundColor: const Color(0xFFFE4A49),
+                          foregroundColor: Colors.white,
+                          icon: Icons.delete,
+                          label: 'Hapus',
+                        ),
+                      ],
+                    ),
+
+                    child: ListTile(
+                      dense: true,
+                      leading: FaIcon(data['tipe'] == 'pembayaran' ? FontAwesomeIcons.signOutAlt : FontAwesomeIcons.signInAlt, color: data['tipe'] == 'pembayaran' ? kErrorColor : Colors.green[600], size: 26,),
+                      title: dText(data['email'], fontSize: 16),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          dText(DateFormat.yMEd().add_jm().format(DateTime.parse(data['tanggal_transaksi'])), fontSize: 12, fontWeight: FontWeight.w600),
+                          dText("Transaction ID : ${document.id}", fontSize: 10, fontWeight: FontWeight.w500),
+                        ]
+                      ), 
+                      trailing: dText("Rp ${NumberFormat('#,##0', 'id_ID').format(data['nominal'])}", fontSize: 14, fontWeight: FontWeight.bold, color: data['tipe'] == 'pembayaran' ? kErrorColor : Colors.green[600])
+                    )
                   );
                 }).toList(),
               );
+
           }
 
           // if (snapshot.connectionState == ConnectionState.waiting) { 
