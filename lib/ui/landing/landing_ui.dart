@@ -71,8 +71,17 @@ class Landing extends StatelessWidget {
               CustomerHeader(landingC: landingC),
               const Divider(thickness: 6),
               Padding(
-                padding: const EdgeInsets.only(left: kSpaceM, top: kSpaceS, bottom: kSpaceS),
-                child: dText("Riwayat transaksimu", fontWeight: FontWeight.bold),
+                padding: const EdgeInsets.only(left: kSpaceM, top: 0, bottom: 0, right: kSpaceS),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    dText("Riwayat transaksi trakhirmu", fontWeight: FontWeight.bold),
+                    TextButton(
+                      onPressed: () {}, 
+                      child: dText("LIHAT SEMUA", fontSize: 12, fontWeight: FontWeight.bold)
+                    )
+                  ],
+                )
               ),
               CustomerTransaction(landingC: landingC)
             ],
@@ -122,7 +131,7 @@ class CustomerTransaction extends StatelessWidget {
                   return ListTile(
                     dense: true,
                     leading: FaIcon(data['tipe'] == 'pembayaran' ? FontAwesomeIcons.signOutAlt : FontAwesomeIcons.signInAlt, color: data['tipe'] == 'pembayaran' ? kErrorColor : Colors.green[600], size: 26,),
-                    title: dText(data['email'], fontSize: 16),
+                    title: dText(data['tipe'].toString().toUpperCase(), fontSize: 13, fontWeight: FontWeight.bold),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
