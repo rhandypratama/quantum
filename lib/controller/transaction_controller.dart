@@ -140,7 +140,7 @@ class TransactionController extends GetxController {
             await getAdminInformation(); // mencari saldo wallet admin terakhir
             var hasil = 0;
             var hasilAdmin = 0;
-            if (tipeTransaksi.value == 'pembayaran') {
+            if (tipeTransaksi.value == 'pembayaran' || tipeTransaksi.value == 'tarik saldo') {
               hasil = dataUser['saldo_wallet'] - int.parse(nominalController.text.trim());
               hasilAdmin = dataAdmin['saldo_wallet'] - int.parse(nominalController.text.trim());
             } else {

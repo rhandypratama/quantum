@@ -51,7 +51,7 @@ class Customer extends StatelessWidget {
               stream: customerC.streamAllCustomer(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: SizedBox(width: 50, height: 50, child: CircularProgressIndicator()));
+                  return const Center(child: SizedBox(width: 30, height: 30, child: CircularProgressIndicator()));
                 }
                 if (snapshot.data!.docs.isEmpty) {
                   return EmptyData(

@@ -6,4 +6,5 @@ abstract class RouteName {
   static const scanQrCode = '/scan-qr-code';
   static const transaction = '/transaction';
   static const customer = '/customer';
+  static const laporan = '/laporan';
 }

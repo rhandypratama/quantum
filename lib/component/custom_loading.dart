@@ -16,7 +16,7 @@ class MyLoading{
       context: Get.context!,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Center(child: SizedBox(width: 40, height: 40, child: CircularProgressIndicator(strokeWidth: 6, backgroundColor: Colors.black12))),
+          title: const Center(child: SizedBox(width: 30, height: 30, child: CircularProgressIndicator(strokeWidth: 6, backgroundColor: Colors.black12))),
           content: dText(title!, textAlign: TextAlign.center),
           contentPadding: const EdgeInsets.symmetric(vertical: kDefaultPadding),
           shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(kRadiusS))),

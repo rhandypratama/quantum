@@ -180,6 +180,26 @@ class Header extends StatelessWidget {
             //     }
             //     // child: dText(text, fontSize: 18, fontWeight: FontWeight.w600),
             //   ),
+          ),
+          const SizedBox(height: kSpaceS),
+          Obx(() =>
+            transC.loading.value
+            ? buttonLoading()
+            : 
+            PrimaryButton(
+              text: "Tarik Saldo", 
+              press: () {
+                transC.tipeTransaksi.value = 'tarik saldo';
+                Get.bottomSheet(
+                  Confirmation(),
+                  enterBottomSheetDuration: const Duration(milliseconds: 300),
+                  barrierColor: Colors.black38,
+                  isDismissible: true,
+                  enableDrag: true,
+                  isScrollControlled: true,
+                );
+              }
+            )
           )
         ]
       ),

@@ -90,5 +90,6 @@ class CustomerController extends GetxController {
       .orderBy('tanggal_transaksi', descending: true)
       .limitToLast(30)
       .snapshots();
+      // .get();
   }
 }

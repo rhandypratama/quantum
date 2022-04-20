@@ -59,8 +59,17 @@ class Landing extends StatelessWidget {
               AdminHeader(landingC: landingC),
               const Divider(thickness: 6),
               Padding(
-                padding: const EdgeInsets.only(left: kSpaceM, top: kSpaceS, bottom: kSpaceS),
-                child: dText("Riwayat semua transaksi", fontWeight: FontWeight.bold),
+                padding: const EdgeInsets.only(left: kSpaceM, top: 0, bottom: 0, right: kSpaceS),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    dText("Riwayat transaksi terakhir", fontWeight: FontWeight.bold),
+                    TextButton(
+                      onPressed: () {}, 
+                      child: dText("LIHAT SEMUA", fontSize: 12, fontWeight: FontWeight.bold)
+                    )
+                  ],
+                )
               ),
               AdminTransaction(landingC: landingC)
             ],
@@ -130,7 +139,7 @@ class CustomerTransaction extends StatelessWidget {
                 Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
                   return ListTile(
                     dense: true,
-                    leading: FaIcon(data['tipe'] == 'pembayaran' ? FontAwesomeIcons.signOutAlt : FontAwesomeIcons.signInAlt, color: data['tipe'] == 'pembayaran' ? kErrorColor : Colors.green[600], size: 26,),
+                    leading: FaIcon(data['tipe'] == 'top up' ? FontAwesomeIcons.signInAlt : FontAwesomeIcons.signOutAlt, color: data['tipe'] == 'top up' ? Colors.green[600] : kErrorColor, size: 26,),
                     title: dText(data['tipe'].toString().toUpperCase(), fontSize: 13, fontWeight: FontWeight.bold),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -140,7 +149,7 @@ class CustomerTransaction extends StatelessWidget {
                       ]
                     ),
                     // subtitle: dText(DateFormat.yMEd().add_jm().format(DateTime.parse(data['tanggal_transaksi'])), fontSize: 12, fontWeight: FontWeight.w600),
-                    trailing: dText("Rp ${NumberFormat('#,##0', 'id_ID').format(data['nominal'])}", fontSize: 14, fontWeight: FontWeight.bold, color: data['tipe'] == 'pembayaran' ? kErrorColor : Colors.green[600])
+                    trailing: dText("Rp ${NumberFormat('#,##0', 'id_ID').format(data['nominal'])}", fontSize: 14, fontWeight: FontWeight.bold, color: data['tipe'] == 'top up' ? Colors.green[600] : kErrorColor)
                   );
                 }).toList(),
               );
@@ -295,7 +304,7 @@ class AdminHeader extends StatelessWidget {
               Column(
                 children: [
                   MaterialButton(
-                    onPressed: () {},
+                    onPressed: () => Get.toNamed(RouteName.laporan),
                     color: Colors.lightBlue[600],
                     textColor: Colors.white,
                     child: const Icon(Icons.bar_chart_outlined),
@@ -350,16 +359,22 @@ class AdminTransaction extends StatelessWidget {
                 Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
                   return ListTile(
                     // dense: true,
-                    leading: FaIcon(data['tipe'] == 'pembayaran' ? FontAwesomeIcons.signOutAlt : FontAwesomeIcons.signInAlt, color: data['tipe'] == 'pembayaran' ? kErrorColor : Colors.green[600], size: 26,),
+                    leading: FaIcon(data['tipe'] == 'top up' ? FontAwesomeIcons.signInAlt : FontAwesomeIcons.signOutAlt, color: data['tipe'] == 'top up' ? Colors.green[600] : kErrorColor, size: 26,),
                     title: dText(data['email'], fontSize: 16),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        dText(DateFormat.yMEd().add_jm().format(DateTime.parse(data['tanggal_transaksi'])), fontSize: 12, fontWeight: FontWeight.w600),
+                        Row(
+                          children: [
+                            dText(data['tipe'].toString().toUpperCase(), fontSize: 10, fontWeight: FontWeight.w600, color: Colors.black),
+                            dText(" - ", fontSize: 10, color: Colors.black),
+                            dText(DateFormat.yMEd().add_jm().format(DateTime.parse(data['tanggal_transaksi'])), fontSize: 10, fontWeight: FontWeight.w600, color: Colors.black),
+                          ],
+                        ),
                         dText("Transaction ID : ${document.id}", fontSize: 10, fontWeight: FontWeight.w500),
                       ]
                     ), 
-                    trailing: dText("Rp ${NumberFormat('#,##0', 'id_ID').format(data['nominal'])}", fontSize: 14, fontWeight: FontWeight.bold, color: data['tipe'] == 'pembayaran' ? kErrorColor : Colors.green[600]),
+                    trailing: dText("Rp ${NumberFormat('#,##0', 'id_ID').format(data['nominal'])}", fontSize: 14, fontWeight: FontWeight.bold, color: data['tipe'] == 'top up' ? Colors.green[600] : kErrorColor),
                     onLongPress: () {
                       landingC.dataTrans.value = {
                         'transId': document.id,
