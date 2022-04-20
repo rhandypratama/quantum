@@ -113,6 +113,9 @@ class LaporanController extends GetxController {
       .get()
       .then((QuerySnapshot<Map<String, dynamic>> documentSnapshot) {
         if (documentSnapshot.docs.isNotEmpty) {
+          totalTopUp.value = 0;
+          totalPembayaran.value = 0;
+          totalTarikSaldo.value = 0;
           documentSnapshot.docs.map((DocumentSnapshot document) {
             Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
             if (data['tipe'] == 'top up') {
